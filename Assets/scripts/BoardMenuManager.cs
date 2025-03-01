@@ -54,6 +54,8 @@ public class BoardMenuManager : MonoBehaviour
     {
         widthField.text = width.ToString();
         heightField.text = height.ToString();
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
         PlayerPrefs.SetInt("width",width);
         PlayerPrefs.SetInt("height",height);
     }
