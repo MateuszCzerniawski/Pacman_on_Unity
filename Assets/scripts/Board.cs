@@ -432,7 +432,7 @@ public class Board : MonoBehaviour
 
     private void AdjustCamera()
     {
-        camera.orthographicSize = Mathf.Max(height, width);
+        camera.orthographicSize = Mathf.Max(height/2, width/2);
         camera.transform.position=new Vector3(width / 2f, height / -2f, camera.transform.position.z);
     }
 

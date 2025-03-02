@@ -18,7 +18,7 @@ public class PointCounter : MonoBehaviour
 
     private void Update()
     {
-        text.text = gathered.ToString();
+        text.text = "score: "+gathered;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
