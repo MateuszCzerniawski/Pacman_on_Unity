@@ -14,11 +14,12 @@ public class MainMenuManager : MonoBehaviour
     public void OpenRecords()
     {
         Debug.Log("RECORDS");
-        SceneManager.LoadScene("RecordsMenu");
+        SceneManager.LoadScene("Records");
     }
 
     public void Exit()
     {
         Debug.Log("Quiting...");
+        Application.Quit();
     }
 }

@@ -61,7 +61,8 @@ public class Board : MonoBehaviour
         var healthComponent = player.GetComponent<PlayerHealth>();
         healthComponent.playerSpawn = spawn;
         healthComponent.MoveToSpawn();
-        SpawnGhosts((int)(Math.Sqrt(width*height)/Math.Sqrt(Math.Max(width,height))));
+        //SpawnGhosts((int)(Math.Sqrt(width*height)/Math.Sqrt(Math.Max(width,height))));
+        SpawnGhosts(width*height/100);
     }
 
     private void Update()

@@ -7,6 +7,7 @@ using UnityEngine;
 public class PointCounter : MonoBehaviour
 {
     [SerializeField] public TMP_Text text;
+    [SerializeField] public GameObject resultMenu;
     public int gathered;
     private List<GameObject> _onBoard;
     void Awake()
@@ -29,7 +30,7 @@ public class PointCounter : MonoBehaviour
             gathered ++;
             if (_onBoard.Count <= 0)
             {
-                Win();
+                resultMenu.GetComponent<ResultMenu>().Win(gathered);
             }
         }
     }
@@ -40,10 +41,5 @@ public class PointCounter : MonoBehaviour
         {
             _onBoard.Add(point);
         }
-    }
-
-    private void Win()
-    {
-        Debug.Log("WIN");
     }
 }

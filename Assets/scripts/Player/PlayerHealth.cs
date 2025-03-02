@@ -7,6 +7,7 @@ public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] public int startHealth=3;
     [SerializeField] public float invulnerabilityDuration = 3f;
+    [SerializeField] public GameObject resultMenu;
     public Vector2 playerSpawn;
     private int _health;
     private bool _canGetDamage;
@@ -29,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
             _health -= Math.Abs(dmg);
             if (_health <= 0)
             {
-                Loose();
+                resultMenu.GetComponent<ResultMenu>().Lose();
                 return;
             }
             MoveToSpawn();
@@ -48,11 +49,6 @@ public class PlayerHealth : MonoBehaviour
         _canGetDamage = false;
         yield return new WaitForSeconds(invulnerabilityDuration);
         _canGetDamage = true;
-    }
-
-    private void Loose()
-    {
-        Debug.Log("LOOSE");
     }
     
     
