@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = System.Random;
 
@@ -9,6 +7,7 @@ public class GhostBehavior : MonoBehaviour
 {
     [SerializeField] public float speed = 5f;
     [SerializeField] public int radius=10;
+    [SerializeField] public int eatValue = 100;
     private Random _random;
     private char[,] _board;
     private int _width;
@@ -16,15 +15,16 @@ public class GhostBehavior : MonoBehaviour
     private char _wall;
     private Vector2Int _target;
     private Queue<Vector2Int> _path;
+    private bool _eatable;
 
     private void Start()
     {
         _random = new Random();
+        _eatable = false;
         _width = PlayerPrefs.GetInt("width",-1);
         _height = PlayerPrefs.GetInt("height",-1);
         if (_width < 0 || _height < 0 || _board is null)
         {
-            Debug.LogError("load error");
             Destroy(gameObject);
         }
     }
@@ -40,9 +40,18 @@ public class GhostBehavior : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        var player = other.gameObject;
+        if (!player.CompareTag("Player")){ return; }
+        var health = player.GetComponent<PlayerHealth>();
+        if (!_eatable)
         {
-            other.gameObject.GetComponent<PlayerHealth>().GetDamage(1);
+            health.GetDamage(1);
+        }
+        else
+        {
+            player.GetComponent<PointCounter>().AddToScore(eatValue);
+            transform.position = health.playerSpawn;
+            TakePath();
         }
     }
     
@@ -61,7 +70,6 @@ public class GhostBehavior : MonoBehaviour
     private Queue<Vector2Int> BFS()
     {
         Vector2Int current = new Vector2Int((int)gameObject.transform.position.x, (int)gameObject.transform.position.y*-1);
-        Debug.Log("from "+current+" to "+_target);
         Dictionary<Vector2Int, Vector2Int> neighbours = new Dictionary<Vector2Int, Vector2Int>();
         HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
@@ -141,5 +149,11 @@ public class GhostBehavior : MonoBehaviour
         {
             _path = null;
         }
+    }
+
+    public void SetEatable(bool eat)
+    {
+        _eatable = eat;
+        //Tu miejsce na zmianę sprite
     }
 }

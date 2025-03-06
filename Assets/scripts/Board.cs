@@ -35,8 +35,11 @@ public class Board : MonoBehaviour
     [SerializeField] public GameObject player;
     [SerializeField] public GameObject point;
     [SerializeField] public GameObject ghost;
+    [SerializeField] public GameObject buff;
     private int height=20;
     private int width=20;
+    private float _buffSpawnBreak = 2f;
+    private Random _random;
     
     private enum Direction {UP=1,RIGHT=2,DOWN=4,LEFT=8}
 
@@ -45,9 +48,10 @@ public class Board : MonoBehaviour
     private int _y;
     private const char Empty = ' ';
     private const char Wall = 'X';
-
+    
     private void Start()
     {
+        _random = new Random();
         width = PlayerPrefs.GetInt("width");
         height = PlayerPrefs.GetInt("height");
         Initialize();
@@ -63,11 +67,7 @@ public class Board : MonoBehaviour
         healthComponent.MoveToSpawn();
         //SpawnGhosts((int)(Math.Sqrt(width*height)/Math.Sqrt(Math.Max(width,height))));
         SpawnGhosts(width*height/100);
-    }
-
-    private void Update()
-    {
-        tilemap.RefreshAllTiles();
+        StartCoroutine(SpawnBuffs());
     }
 
     private void Initialize(){
@@ -83,10 +83,9 @@ public class Board : MonoBehaviour
 
     private void Generate()
     {
-        Random random = new Random();
         int toCover=height*width/4,drilled=1;
-        _x = random.Next(width);
-        _y = random.Next(height);
+        _x = _random.Next(width);
+        _y = _random.Next(height);
         _board[_x,_y]=Empty;
         Stack<int[]> nodes = new Stack<int[]>();
         nodes.Push(new []{_x,_y});
@@ -95,7 +94,7 @@ public class Board : MonoBehaviour
             Direction[] possibilities=PosMoves();
             if (possibilities.Length != 0)
             {
-                Direction choice = possibilities[random.Next(possibilities.Length)];
+                Direction choice = possibilities[_random.Next(possibilities.Length)];
                 switch (choice)
                 {
                     case Direction.UP:
@@ -159,7 +158,7 @@ public class Board : MonoBehaviour
                 {
                     var pos = new Vector3(i+0.5f*pointScale.x, -j+0.5f*pointScale.y, 0);
                     GameObject p = Instantiate(point, pos, Quaternion.identity);
-                    counter.Add(p);
+                    counter.AddToTrack(p);
                 }
             }
         }
@@ -372,24 +371,56 @@ public class Board : MonoBehaviour
                         case 16+4:
                         case 16+128:
                         case 16+4+128:
+                        case 16+1:
+                        case 16+4+1:
+                        case 16+128+1:
+                        case 16+4+128+1:
+                        case 16+32:
+                        case 16+4+32:
+                        case 16+128+32:
+                        case 16+4+128+32:
                             tilemap.SetTile(pos, uNorthTile);
                             break;
                         case 2: //u east
                         case 2+1:
                         case 2+4:
                         case 2+1+4:
+                        case 2+32:
+                        case 2+1+32:
+                        case 2+4+32:
+                        case 2+1+4+32:
+                        case 2+128:
+                        case 2+1+128:
+                        case 2+4+128:
+                        case 2+1+4+128:
                             tilemap.SetTile(pos, uEastTile);
                             break;
                         case 8: //u south
                         case 8+1:
                         case 8+32:
                         case 8+1+32:
+                        case 8+4:
+                        case 8+1+4:
+                        case 8+32+4:
+                        case 8+1+32+4:
+                        case 8+128:
+                        case 8+1+128:
+                        case 8+32+128:
+                        case 8+1+32+128:
                             tilemap.SetTile(pos, uSouthTile);
                             break;
                         case 64: //u west
                         case 64+32:
                         case 64+128:
                         case 64+32+128:
+                        case 64+1:
+                        case 64+32+1:
+                        case 64+128+1:
+                        case 64+32+128+1:
+                        case 64+4:
+                        case 64+32+4:
+                        case 64+128+4:
+                        case 64+32+128+4:
                             tilemap.SetTile(pos, uWestTile);
                             break;
                         case 2 + 8 + 16 + 64: //cross
@@ -450,5 +481,29 @@ public class Board : MonoBehaviour
             g.GetComponent<GhostBehavior>().SetBoard(_board,Wall);
         }
     }
-    
+
+    IEnumerator SpawnBuffs()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(_buffSpawnBreak);
+            List<Vector2> positions=new List<Vector2>();
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    Vector2 pos = new(i, -j), size = new(0.5f, 0.5f);
+                    var colliders = Physics2D.OverlapBoxAll(pos,size, 0).ToList();
+                    if (colliders.Count ==0)
+                    {
+                        positions.Add(pos);
+                    }
+                }
+            }
+            if(positions.Count>0){
+                var next = positions[_random.Next(positions.Count)];
+                Instantiate(buff, next, quaternion.identity);
+            }
+        }
+    }
 }

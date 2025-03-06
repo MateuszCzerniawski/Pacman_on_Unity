@@ -6,19 +6,17 @@ using UnityEngine;
 
 public class PointCounter : MonoBehaviour
 {
-    [SerializeField] public TMP_Text text;
+    [SerializeField] public GameObject gameUI;
     [SerializeField] public GameObject resultMenu;
-    public int gathered;
+    [SerializeField] public float defaultMultiplier = 1f;
+    private int _gathered;
     private List<GameObject> _onBoard;
+    private float _multiplier = 1f;
     void Awake()
     {
-        gathered = 0;
+        _multiplier = defaultMultiplier;
+        _gathered = 0;
         _onBoard = new List<GameObject>();
-    }
-
-    private void Update()
-    {
-        text.text = "score: "+gathered;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -27,19 +25,30 @@ public class PointCounter : MonoBehaviour
         {
             _onBoard.Remove(other.gameObject);
             Destroy(other.gameObject);
-            gathered ++;
+            AddToScore(1);
             if (_onBoard.Count <= 0)
             {
-                resultMenu.GetComponent<ResultMenu>().Win(gathered);
+                resultMenu.GetComponent<ResultMenu>().Win(_gathered);
             }
         }
     }
 
-    public void Add(GameObject point)
+    public void AddToTrack(GameObject point)
     {
         if (point is not null)
         {
             _onBoard.Add(point);
         }
+    }
+
+    public void AddToScore(int points)
+    {
+        _gathered += (int)(points * _multiplier);
+        gameUI.GetComponent<UIManager>().UpdateScore(_gathered);
+    }
+
+    public void SetMultiplier(float multiplier)
+    {
+        _multiplier = multiplier;
     }
 }

@@ -6,15 +6,17 @@ TagManager:
   tags:
   - point
   - map
+  - ghost
+  - swarm
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - points
   - Water
   - UI
   - Ghosts
-  - 
+  - swarm
   - 
   - 
   - 

@@ -17,9 +17,9 @@ public class RecordsMenu : MonoBehaviour
         template.SetActive(false);
         var scores = HighScoreList.Load().GetHighScores();
         _max = Math.Min(scores.Count, defaultMax);
+        var pos = template.GetComponent<RectTransform>().anchoredPosition;
         for (int i = 0; i < _max; i++)
         {
-            var pos = template.GetComponent<RectTransform>().anchoredPosition;
             var record = Instantiate(template, gameObject.transform);
             record.SetActive(true);
             record.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y-_recordShift);
