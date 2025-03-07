@@ -176,5 +176,6 @@ MonoBehaviour:
   EaterBuffSprtie: {fileID: 21300000, guid: c5eb59c625b0bb147bd18aa7096cc79a, type: 3}
   SpeedBoostBuffSprtie: {fileID: 21300000, guid: 4ef1d6511afedfc42ae604ca65062b9f, type: 3}
   ExtraHealthBuffSprite: {fileID: 21300000, guid: cb952fac92129e54da9390f47f191fd1, type: 3}
-  SwarmBuffSprite: {fileID: 21300000, guid: e1d00dbd15d9cb545a6bb5656bdbd5b7, type: 3}
+  SwarmBuffSprite: {fileID: 21300000, guid: e7901fb2350045341af3bc70cbcd8cc0, type: 3}
   WarpTunnelSprite: {fileID: 21300000, guid: 213ff4127bae5bb4c8fc0ae9eef7024a, type: 3}
+  PhasingBuffSprite: {fileID: 21300000, guid: ec9edfc1237e16d46a9cb7a0854fe5ad, type: 3}

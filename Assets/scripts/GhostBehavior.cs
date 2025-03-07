@@ -5,9 +5,11 @@ using Random = System.Random;
 
 public class GhostBehavior : MonoBehaviour
 {
+    [SerializeField] public List<Color> colors;
     [SerializeField] public float speed = 5f;
     [SerializeField] public int radius=10;
     [SerializeField] public int eatValue = 100;
+    [SerializeField] public GameObject bodySprite;
     private Random _random;
     private char[,] _board;
     private int _width;
@@ -16,6 +18,10 @@ public class GhostBehavior : MonoBehaviour
     private Vector2Int _target;
     private Queue<Vector2Int> _path;
     private bool _eatable;
+    private SpriteRenderer _eyesRenderer;
+    private SpriteRenderer _bodyRenderer;
+    private Animator _animator;
+    private Color _color;
 
     private void Start()
     {
@@ -27,6 +33,10 @@ public class GhostBehavior : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        _color = colors[_random.Next(colors.Count)];
+        _eyesRenderer = GetComponent<SpriteRenderer>();
+        _bodyRenderer = bodySprite.GetComponent<SpriteRenderer>();
+        _animator = bodySprite.GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -36,6 +46,9 @@ public class GhostBehavior : MonoBehaviour
             TakePath();
         }
         Move();
+        _animator.SetBool("isTasty",_eatable);
+        _eyesRenderer.enabled = !_eatable;
+        _bodyRenderer.color = _eatable ? Color.white : _color;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

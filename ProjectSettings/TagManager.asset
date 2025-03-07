@@ -8,6 +8,7 @@ TagManager:
   - map
   - ghost
   - swarm
+  - gate
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - UI
   - Ghosts
   - swarm
-  - 
+  - map
   - 
   - 
   - 

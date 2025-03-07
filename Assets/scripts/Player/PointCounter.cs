@@ -21,6 +21,11 @@ public class PointCounter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        HandleCollisionWithPoint(other);
+    }
+
+    public void HandleCollisionWithPoint(Collider2D other)
+    {
         if (_onBoard.Contains(other.gameObject))
         {
             _onBoard.Remove(other.gameObject);
